@@ -1,135 +1,233 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>HTTP Request Tool</title>
     <link rel="stylesheet" type="text/css" href='./src/css/bootstrap.css' />
-    <script>window.$ = window.jQuery = require('./src/js/jquery-3.0.0.min.js');</script>
+    <script>
+        window.$ = window.jQuery = require('./src/js/jquery-3.0.0.min.js');
+    </script>
     <style>
-      *{border:0px;padding:0px;margin:0px}
-      body{
-        background-image: url(./src/img/bg.jpg);
-        color: #e0e0e0;
-      }
-      select,button{
-        color: #fff;
-        background-color: #3071a9;
-        border-color: #285e8e;
-        padding: 6px 12px;
-        border-radius: 5px;
-      }
-      input,textarea{
-        border-radius:5px;
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-        color: #fff;
-        background-color: #949494;
-        border: 1px solid #ccc;
-        padding: 6px 12px;
-      }
-      .inline{display:inline-block}
-      .ab{position:absolute}
-      .main_content{margin-top:50px;margin-left:100px}
-      .request select{
-        height: 34px;
-      }
-      .request input{
-        width: 340px;
-      }
-      .request,.config,.response{
-        margin-top: 40px;
-      }
-      .response label{
-        vertical-align: top;
-      }
-      .response textarea{
-        padding: 6px 12px;
-        height: 300px;
-        width: 400px;
-      }
-      .config_content{
-        margin-top:4px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class='main_content'>
-      <h2>HTTP Request Tool</h2>
-      <div class='request'>
-        <label>URL:</label>
-        <select>
-          <option>Get</option>
-          <option>Post</option>
-        </select>
-        <input placeholder="input url with http://" />
-        <button>send</button>
-      </div>
-
-      <div class='config'>
-        <h4>Params Config</h4>
-        <div  class='config_content'>
-          <label class=''>Key:</label>
-          <input />
-          <label>Value:</label>
-          <input />
-          <button class='add'>+</button>
-          <button class='reduce'>-</button>
-        </div>
-      </div>
-      <div>
-        <h4>Header config</h4>
-        <div class='config_content'>
-          <label>Key:</label>
-          <input />
-          <label>Value:</label>
-          <input />
-          <button class='add'>+</button>
-          <button class='reduce'>-</button>
-        </div>
-        <div  class='config_content'>
-          <label>Key:</label>
-          <input />
-          <label>Value:</label>
-          <input />
-          <button class='add'>+</button>
-          <button class='reduce'>-</button>
-        </div>
-      </div>
-
-      <div class='response'>
-        <label>Response:</label>
-        <textarea type='text' readonly="readonly"></textarea>
-      </div>
-    </div>
-  </body>
-  <script>
-    $(document).ready(function(){
-
-      var int = {
-        int: function(){
-          int.addListner()
-        },
-        addListner: function(){
-          $('.add').on('click', function(e){
-            var target = $(e.target)
-            var repeatNode = $(target.parent()).clone(true)
-            target.parent().parent().append(repeatNode)
-            target = null
-            repeatNode = null
-          })
-          $('.reduce').on('click', function(e){
-
-          })
+        * {
+            border: 0px;
+            padding: 0px;
+            margin: 0px
         }
-      }
-      int.int()
-      //send ajax
-      function sendAjax(config){
-        var url = config.url,
-            type = config.type,
-            param = config.param,
-            head = config.head
-      }
+        
+        body {
+            background-image: url(./src/img/bg.jpg);
+            color: #e0e0e0;
+        }
+        
+        select,
+        button {
+            color: #fff;
+            background-color: #3071a9;
+            border-color: #285e8e;
+            padding: 6px 12px;
+            border-radius: 5px;
+        }
+        
+        input,
+        textarea {
+            border-radius: 5px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            color: #fff;
+            background-color: #949494;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+        }
+        
+        .inline {
+            display: inline-block
+        }
+        
+        .ab {
+            position: absolute
+        }
+        
+        .main_content {
+            margin-top: 50px;
+            margin-left: 100px
+        }
+        
+        .request select {
+            height: 34px;
+        }
+        
+        .request input {
+            width: 340px;
+        }
+        
+        .request,
+        .config,
+        .response {
+            margin-top: 40px;
+        }
+        
+        .response label {
+            vertical-align: top;
+        }
+        
+        .response textarea {
+            padding: 6px 12px;
+            height: 300px;
+            width: 400px;
+        }
+        
+        .config_content {
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='main_content'>
+        <h2>HTTP Request Tool</h2>
+        <div class='request'>
+            <label>URL:</label>
+            <select class='request_type'>
+              <option>Get</option>
+              <option>Post</option>
+            </select>
+            <input value="http://" class='request_url' />
+            <button class='request_send'>send</button>
+        </div>
+
+        <div class='config'>
+            <h4>Params Config</h4>
+            <div class='config_content param_config'>
+                <label>Key:</label>
+                <input class='param_key' />
+                <label>Value:</label>
+                <input class='param_value' />
+                <button class='add'>+</button>
+                <button class='reduce'>-</button>
+            </div>
+        </div>
+        <div>
+            <h4>Header config</h4>
+            <div class='config_content head_config'>
+                <label>Key:</label>
+                <input class='head_key' />
+                <label>Value:</label>
+                <input class='head_value' />
+                <button class='add'>+</button>
+                <button class='reduce'>-</button>
+            </div>
+        </div>
+
+        <div class='response'>
+            <label>Response:</label>
+            <textarea type='text' readonly="readonly" class='response_textarea'></textarea>
+        </div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+
+        var int = {
+            int: function() {
+                int.addListner()
+            },
+            addListner: function() {
+                $('.add').on('click', function(e) {
+                    var target = $(e.target)
+                    var repeatNode = $(target.parent()).clone(true)
+                    $.makeArray(repeatNode.children()).forEach(function(child) {
+                        if (child.nodeName === 'INPUT') {
+                            $(child).val('')
+                        }
+                    })
+                    target.parent().parent().append(repeatNode)
+                    target = null
+                    repeatNode = null
+                })
+                $('.reduce').on('click', function(e) {
+                    var target = $(e.target)
+                    if (target.parent().parent().children().length > 2) {
+                        target.parent().remove()
+                    }
+                })
+                $('.request_send').on('click', function(e) {
+                    var request = new Request()
+                    var config = request.formatterConfig(int.getConfig())
+                    request.sendAjax(config, function(status) {
+                        $('.response_textarea').val(status)
+                    })
+
+
+                })
+            },
+            getConfig: function() {
+                var config = {}
+                var param_keys = $.makeArray($('.param_key'))
+                var param_values = $.makeArray($('.param_value'))
+                var head_keys = $.makeArray($('.head_key'))
+                var head_values = $.makeArray($('.head_value'))
+                var type = $('.request_type').val().toLowerCase()
+                var url = $('.request_url').val()
+                var params = []
+                var heads = []
+                for (var i = 0, len = param_keys.length; i < len; i++) {
+                    params.push([$(param_keys[i]).val(), $(param_values[i]).val()])
+                }
+                for (var i = 0, len = head_keys.length; i < len; i++) {
+                    params.push([$(head_keys[i]).val(), $(head_values[i]).val()])
+                }
+                config.type = type
+                config.url = url
+                config.params = params
+                config.heads = heads
+                param_keys = null
+                param_values = null
+                head_keys = null
+                head_values = null
+                return config
+            }
+        }
+        int.int()
+
+
+        var Request = function() {
+
+            }
+            //send ajax
+        Request.prototype.sendAjax = function(config, callback) {
+            var url = config.url,
+                type = config.type,
+                param = config.param,
+                head = config.head
+            $.ajax({
+                url: url,
+                type: type,
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(param),
+                success: callback
+            })
+        }
+        Request.prototype.formatterConfig = function(config) {
+            var newConfig = {}
+            newConfig.type = config.type
+            newConfig.url = config.url
+            newConfig.param = {}
+            newConfig.head = {}
+            config.params.forEach(function(each) {
+                if (each[0] != '' && each[1] != '') {
+                    newConfig.param[each[0]] = each[1]
+                }
+            })
+            config.heads.forEach(function(each) {
+                if (each[0] != '' && each[1] != '') {
+                    newConfig.head[each[0]] = each[1]
+                }
+            })
+            return newConfig
+        }
 
     })
-  </script>
+</script>
+
 </html>

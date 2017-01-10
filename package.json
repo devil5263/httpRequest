@@ -1,14 +1,18 @@
 {
-  "name"    : "test-app",
-  "version" : "0.1.0",
-  "main"    : "main.js",
-  "scripts": {
-    "dev": "./node_modules/.bin/electron .",
-    "packager": "electron-packager ./app HelloWorld --all --out ./OutApp --version 0.1.0 --overwrite"
-  },
-  "dependencies": {
-    "electron": "",
-    "electron-prebuilt": "",
-    "electron-packager": ""
-  }
+    "name": "HttpRequest",
+    "version": "0.0.1",
+    "main": "main.js",
+    "author": "Leo",
+    "scripts": {
+        "dev": "./node_modules/.bin/electron .",
+        "packager": "electron-packager ./app HelloWorld --all --out ./OutApp --version 0.1.0 --overwrite"
+    },
+    "dependencies": {
+        "electron": "",
+        "electron-prebuilt": "",
+        "electron-packager": ""
+    },
+    "devDependencies": {
+        "electron-packager": "^8.4.0"
+    }
 }
