@@ -79,11 +79,29 @@
         .config_content {
             margin-top: 4px;
         }
+        
+        .show_error {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            display: none;
+            color: red;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            font-size: 20px;
+            background-color: rgba(171, 52, 52, 0.18);
+        }
     </style>
 </head>
 
 <body>
     <div class='main_content'>
+        <div class='show_error'>
+            请输入合法 URL
+        </div>
         <h2>HTTP Request Tool</h2>
         <div class='request'>
             <label>URL:</label>
@@ -110,9 +128,9 @@
             <h4>Header config</h4>
             <div class='config_content head_config'>
                 <label>Key:</label>
-                <input class='head_key' />
+                <input class='head_key' value='contentType' />
                 <label>Value:</label>
-                <input class='head_value' />
+                <input class='head_value' value='application/json' />
                 <button class='add'>+</button>
                 <button class='reduce'>-</button>
             </div>
@@ -153,11 +171,11 @@
                 $('.request_send').on('click', function(e) {
                     var request = new Request()
                     var config = request.formatterConfig(int.getConfig())
-                    request.sendAjax(config, function(status) {
-                        $('.response_textarea').val(status)
-                    })
-
-
+                    if (config) {
+                        request.sendAjax(config, function(status) {
+                            $('.response_textarea').html(status)
+                        })
+                    }
                 })
             },
             getConfig: function() {
@@ -174,7 +192,7 @@
                     params.push([$(param_keys[i]).val(), $(param_values[i]).val()])
                 }
                 for (var i = 0, len = head_keys.length; i < len; i++) {
-                    params.push([$(head_keys[i]).val(), $(head_values[i]).val()])
+                    heads.push([$(head_keys[i]).val(), $(head_values[i]).val()])
                 }
                 config.type = type
                 config.url = url
@@ -199,32 +217,64 @@
                 type = config.type,
                 param = config.param,
                 head = config.head
-            $.ajax({
+            var defaultConfig = {
                 url: url,
                 type: type,
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(param),
+                data: param,
                 success: callback
-            })
+            }
+
+            $.ajax($.extend(defaultConfig, config.head))
         }
         Request.prototype.formatterConfig = function(config) {
             var newConfig = {}
+            var urlReg = /^(http|https):\/\/[^\s]*:[0-9]{4}(\/[^\s]*)*$/
             newConfig.type = config.type
-            newConfig.url = config.url
+            if (urlReg.test(config.url) === true) {
+                newConfig.url = config.url
+            } else {
+                this.error('请输入合法 URL')
+                return false
+            }
             newConfig.param = {}
             newConfig.head = {}
+                // if (config.type === 'post') {
+                //post 方式格式化参数
             config.params.forEach(function(each) {
-                if (each[0] != '' && each[1] != '') {
-                    newConfig.param[each[0]] = each[1]
-                }
-            })
+                    if (each[0] != '' && each[1] != '') {
+                        newConfig.param[each[0]] = each[1]
+                    }
+                })
+                // } else if (config.type === 'get') {
+                //     //get 方式格式化参数添加至 url
+                //     if (config.params.length !== 0) {
+                //         var tempUrl = newConfig.url + '?'
+                //         config.params.forEach(function(each) {
+                //             if (each[0] != '' && each[1] != '') {
+                //                 tempUrl = tempUrl + each[0] + '=' + each[1] + '&'
+                //             }
+                //         })
+                //         newConfig.url = tempUrl
+                //     }
+                // }
+
             config.heads.forEach(function(each) {
                 if (each[0] != '' && each[1] != '') {
                     newConfig.head[each[0]] = each[1]
                 }
             })
             return newConfig
+        }
+        Request.prototype.error = function(str) {
+            if ($('.show_error')) {
+                $('.show_error').val(str)
+                $('.show_error').show()
+                setTimeout(function() {
+                    $('.show_error').hide()
+                }, 1000)
+            } else {
+                alert(str)
+            }
         }
 
     })
