@@ -5,7 +5,6 @@
     "author": "Leo",
     "scripts": {
         "dev": "./node_modules/.bin/electron .",
-        "packageTest": "electron-packager ./app httpRequest --all --out ./OutApp --version 0.1.0 --overwrite",
         "packageMac": "electron-packager . 'Hosts' --platform=mas --arch=x64 --out=./OutApp --asar --version=1.4.14 --ignore=\"(OutApp|docs|.gitignore|LICENSE|README.md|webpack.config.js|node_modules)\"",
         "packageDarwin": "electron-packager . 'Hosts' --platform=darwin --arch=x64 --icon=hosts.icns --out=./OutApp --asar --version=1.4.14 --ignore=\"(OutApp|docs|.gitignore|LICENSE|README.md|webpack.config*|node_modules)\"",
         "packageLinux": "electron-packager . 'Hosts' --platform=linux --arch=x64 --out=./OutApp --asar --version=1.4.14 --ignore=\"(OutApp|docs|.gitignore|LICENSE|README.md|webpack.config.js|node_modules)\"",
