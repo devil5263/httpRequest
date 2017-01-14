@@ -167,7 +167,7 @@
             <button class='request_send'>send</button>
         </div>
 
-        <div class='config'>
+        <div class='config param_config_content'>
             <h4>Params Config</h4>
             <div class='config_content param_config'>
                 <label>Key:</label>
@@ -178,7 +178,7 @@
                 <button class='reduce'>-</button>
             </div>
         </div>
-        <div>
+        <div class='head_config_content'>
             <h4>Header config</h4>
             <div class='config_content head_config'>
                 <label>Key:</label>
@@ -217,13 +217,15 @@
     $(document).ready(function() {
 
         var int = {
-            int: function() {
+            start: function() {
                 this.request = new Request()
+                this.selectedStorage = ''
                 int.addListner()
                 int.showStorageConfig()
             },
             addListner: function() {
                 $('.add').on('click', function(e) {
+                    //add a config dom
                     var target = $(e.target)
                     var repeatNode = $(target.parent()).clone(true)
                     $.makeArray(repeatNode.children()).forEach(function(child) {
@@ -253,6 +255,7 @@
                     var x = e.pageX
                     var y = e.pageY
                     var index = $(e.target).attr('index')
+                    int.selectedStorage = index
                     int.showTooltip(index)
                     $('.save_float_tooltip').css('top', y)
                     $('.save_float_tooltip').css('left', x)
@@ -274,13 +277,16 @@
                     $('.save_each_url').html('')
                     int.showStorageConfig()
                 })
-                $('.add_storage').on('click', function() {
-
-                })
                 $('.remove_storage').on('click', function(e) {
                     var index = $(e.target).attr('index')
                     int.request.removeStorage(index)
                     int.showStorageConfig()
+                })
+                $('.clear_form').on('click', function() {
+                    int.clearInput()
+                })
+                $('.add_storage').on('click', function() {
+                    int.loadStorage()
                 })
             },
             reListner: function() {
@@ -291,6 +297,8 @@
                 $('.save_each_url').unbind()
                 $('.set_storage').unbind()
                 $('.remove_storage').unbind()
+                $('.add_storage').unbind()
+                $('.clear_form').unbind()
                 $('.add_storage').unbind()
                 int.addListner()
             },
@@ -362,6 +370,42 @@
                 tempTable.forEach(function(e) {
                     $('.save_float_tooltip table').append(e)
                 })
+            },
+            clearInput: function() {
+                var inputDom = $.makeArray($('input'))
+                var textAreaDom = $.makeArray($('textarea'))
+                inputDom.forEach(function(e){
+                    $(e).val('')
+                })
+                textAreaDom.forEach(function(e){
+                    $(e).val('')
+                })
+                inputDom = null
+                textAreaDom = null
+            },
+            loadStorage: function() {
+                var index = int.selectedStorage
+                var data = int.request.storage[index]
+                $('.request_url').val(data.url)
+                $('.request_type').val(data.type)
+                var paramConfigDom = $.makeArray($('.param_config'))
+                var headConfigDom = $.makeArray($('.head_config'))
+                var removeDom = paramConfigDom.concat(headConfigDom)
+                removeDom.forEach(function(e){
+                    $(e).remove()
+                })
+                for (var p in data.param) {
+                    var addDom = $(paramConfigDom[0]).clone(true)
+                    $(addDom).find('.param_key').val(p)
+                    $(addDom).find('.param_value').val(data.param[p])
+                    $('.param_config_content').append(addDom)
+                }
+                for (var p in data.head) {
+                    var addDom = $(headConfigDom[0]).clone(true)
+                    $(addDom).find('.head_key').val(p)
+                    $(addDom).find('.head_value').val(data.head[p])
+                    $('.head_config_content').append(addDom)
+                }
             }
         }
 
@@ -439,7 +483,7 @@
             window.localStorage.setItem('leoHttpRequest', JSON.stringify(this.storage))
         }
 
-        int.int()
+        int.start()
     })
 </script>
 
