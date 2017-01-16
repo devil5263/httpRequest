@@ -160,8 +160,8 @@
         <div class='request'>
             <label>URL:</label>
             <select class='request_type'>
-              <option>Get</option>
-              <option>Post</option>
+              <option text='get'>Get</option>
+              <option text='post'>Post</option>
             </select>
             <input value="http://" class='request_url' />
             <button class='request_send'>send</button>
@@ -387,7 +387,7 @@
                 var index = int.selectedStorage
                 var data = int.request.storage[index]
                 $('.request_url').val(data.url)
-                $('.request_type').val(data.type)
+                $(".request_type").find("option[text=" + data.type + "]").attr("selected",true);
                 var paramConfigDom = $.makeArray($('.param_config'))
                 var headConfigDom = $.makeArray($('.head_config'))
                 var removeDom = paramConfigDom.concat(headConfigDom)
