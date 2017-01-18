@@ -182,9 +182,9 @@
             <h4>Header config</h4>
             <div class='config_content head_config'>
                 <label>Key:</label>
-                <input class='head_key' value='contentType' />
+                <input class='head_key' value='Content-Type' />
                 <label>Value:</label>
-                <input class='head_value' value='application/json' />
+                <input class='head_value' value='application/x-www-form-urlencoded' />
                 <button class='add'>+</button>
                 <button class='reduce'>-</button>
             </div>
@@ -421,11 +421,10 @@
                 head = config.head
             var defaultConfig = {
                 url: url,
-                type: type,
+                type: type.toUpperCase(),
                 data: param,
                 success: callback
             }
-
             $.ajax($.extend(defaultConfig, config.head))
         }
         Request.prototype.formatterConfig = function(config) {
