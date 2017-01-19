@@ -182,9 +182,9 @@
             <h4>Header config</h4>
             <div class='config_content head_config'>
                 <label>Key:</label>
-                <input class='head_key' value='contentType' />
+                <input class='head_key' value='Content-Type' />
                 <label>Value:</label>
-                <input class='head_value' value='application/json' />
+                <input class='head_value' value='application/x-www-form-urlencoded' />
                 <button class='add'>+</button>
                 <button class='reduce'>-</button>
             </div>
@@ -278,9 +278,10 @@
                     int.showStorageConfig()
                 })
                 $('.remove_storage').on('click', function(e) {
-                    var index = $(e.target).attr('index')
+                    var index = int.selectedStorage
                     int.request.removeStorage(index)
                     int.showStorageConfig()
+                    $('.save_float_tooltip').css('display', 'none')
                 })
                 $('.clear_form').on('click', function() {
                     int.clearInput()
@@ -374,10 +375,10 @@
             clearInput: function() {
                 var inputDom = $.makeArray($('input'))
                 var textAreaDom = $.makeArray($('textarea'))
-                inputDom.forEach(function(e){
+                inputDom.forEach(function(e) {
                     $(e).val('')
                 })
-                textAreaDom.forEach(function(e){
+                textAreaDom.forEach(function(e) {
                     $(e).val('')
                 })
                 inputDom = null
@@ -387,11 +388,11 @@
                 var index = int.selectedStorage
                 var data = int.request.storage[index]
                 $('.request_url').val(data.url)
-                $(".request_type").find("option[text=" + data.type + "]").attr("selected",true);
+                $(".request_type").find("option[text=" + data.type + "]").attr("selected", true);
                 var paramConfigDom = $.makeArray($('.param_config'))
                 var headConfigDom = $.makeArray($('.head_config'))
                 var removeDom = paramConfigDom.concat(headConfigDom)
-                removeDom.forEach(function(e){
+                removeDom.forEach(function(e) {
                     $(e).remove()
                 })
                 for (var p in data.param) {
@@ -420,11 +421,10 @@
                 head = config.head
             var defaultConfig = {
                 url: url,
-                type: type,
+                type: type.toUpperCase(),
                 data: param,
                 success: callback
             }
-
             $.ajax($.extend(defaultConfig, config.head))
         }
         Request.prototype.formatterConfig = function(config) {
